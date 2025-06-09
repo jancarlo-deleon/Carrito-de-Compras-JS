@@ -12,10 +12,17 @@ function cargarEventListeners() {
     listaCursos.addEventListener("click", agregarCurso);
 
     //Elimina cursos del carrito
-    carrito.addEventListener("click",eliminarCurso);
+    carrito.addEventListener("click", eliminarCurso);
+
+    //Mostrar cursos guardados en localStorage
+    document.addEventListener("DOMContentLoaded", () => {
+        articulosCarrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+        carritoHTML();
+    })
 
     //Vaciar el carrito
-    vaciarCaritoBtn.addEventListener("click",() =>{
+    vaciarCaritoBtn.addEventListener("click", () => {
         articulosCarrito = [] //resetreaer el arreglo
 
         limpiarHTML(); //Eliminamos todo del HTML
@@ -40,7 +47,7 @@ function eliminarCurso(e) {
         const cursoId = e.target.getAttribute("data-id");
 
         //Eliminar del arreglo de articulosCarrito por data-id
-        articulosCarrito = articulosCarrito.filter( curso => curso.id !== cursoId);
+        articulosCarrito = articulosCarrito.filter(curso => curso.id !== cursoId);
 
         carritoHTML(); //Iterar sobre el carrito y mostrar el HTML
 
@@ -66,16 +73,16 @@ function leerDatosCurso(curso) {
 
     if (existe) {
         //Actualizar cantidad
-        const cursos = articulosCarrito.map( (curso) => {
+        const cursos = articulosCarrito.map((curso) => {
             if (curso.id === infoCurso.id) {
-                
+
                 curso.cantidad++;
                 return curso; //Retorna obtejto actualizado
 
-            } else{
+            } else {
 
                 return curso; //Retorna objetos que no fueron actualizados en cantidad
-            
+
             }
         });
 
@@ -123,9 +130,18 @@ function carritoHTML() {
         //agrega el html del carrito en el tbody
         contenedorCarrito.appendChild(row);
 
-
-
     });
+
+    //Agregar carrito de compras al LocalStorage
+    sincronizarStorage();
+
+}
+
+//Sincronizar con LocalStorage
+function sincronizarStorage() {
+
+    localStorage.setItem("carrito", JSON.stringify(articulosCarrito));
+
 }
 
 //Elimina los cursos del tbody
